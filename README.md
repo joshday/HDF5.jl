@@ -3,7 +3,7 @@
 - This package was forked on 2021-04-12.  
 - This fork removes non-standard library dependencies.
 - The intention is to install this in an air-gapped environment where libhdf5 is available but not much else. 
-- REQUIES:
+- REQUIRES:
 
 ```
 ENV["JULIA_LIBHDF5"]
