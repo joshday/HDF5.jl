@@ -1,10 +1,6 @@
 module HDF5
 
 using Base: unsafe_convert, StringVector
-using Requires: @require
-# needed for filter(f, tuple) in julia 1.3
-using Compat
-
 import Libdl
 import Mmap
 
@@ -363,9 +359,6 @@ function Base.cconvert(::Type{Ptr{Cvoid}}, v::VLen)
 end
 
 include("show.jl")
-
-# Blosc compression:
-include("blosc_filter.jl")
 
 # heuristic chunk layout (return empty array to disable chunking)
 function heuristic_chunk(T, shape)
@@ -835,7 +828,6 @@ function _prop_set!(p::Properties, name::Symbol, val, check::Bool = true)
 
     if class == H5P_DATASET_CREATE
         return name === :alloc_time  ? h5p_set_alloc_time(p, val...) :
-               name === :blosc       ? h5p_set_blosc(p, val...) :
                name === :chunk       ? set_chunk(p, val...) :
                name === :compress    ? h5p_set_deflate(p, val...) :
                name === :deflate     ? h5p_set_deflate(p, val...) :
@@ -1997,8 +1989,6 @@ function __init__()
         ENV["HDF5_USE_FILE_LOCKING"] = "FALSE"
     end
 
-    register_blosc()
-
     # Turn off automatic error printing
     # h5e_set_auto(H5E_DEFAULT, C_NULL, C_NULL)
 
@@ -2008,8 +1998,6 @@ function __init__()
                                        create_intermediate_group = 1)
     ASCII_ATTRIBUTE_PROPERTIES[] = create_property(H5P_ATTRIBUTE_CREATE; char_encoding = H5T_CSET_ASCII)
     UTF8_ATTRIBUTE_PROPERTIES[]  = create_property(H5P_ATTRIBUTE_CREATE; char_encoding = H5T_CSET_UTF8)
-
-    @require MPI="da04e1cc-30fd-572f-bb4f-1f8673147195" @eval include("mpio.jl")
 
     return nothing
 end
