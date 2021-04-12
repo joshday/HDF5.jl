@@ -3,6 +3,12 @@
 - This package was forked on 2021-04-12.  
 - This fork removes non-standard library dependencies.
 - The intention is to install this in an air-gapped environment where libhdf5 is available but not much else. 
+- REQUIES:
+
+```
+ENV["JULIA_LIBHDF5"]
+ENV["JULIA_LIBHDF5_HL"]
+```
 
 
 <h1><img alt="HDF5.jl" src="https://raw.githubusercontent.com/JuliaIO/HDF5.jl/master/docs/src/assets/logo.svg" width=300 height=74 ></h1>

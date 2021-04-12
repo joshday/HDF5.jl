@@ -35,13 +35,9 @@ dataspace, datatype
 # Dataspace, Object, Properties, VLen, ChunkStorage, Reference
 
 
-const depsfile = joinpath(dirname(@__DIR__), "deps", "deps.jl")
-if isfile(depsfile)
-    include(depsfile)
-else
-    error("HDF5 is not properly installed. Please run Pkg.build(\"HDF5\") ",
-          "and restart Julia.")
-end
+const libhdf5 = ENV["JULIA_LIBHDF5"]
+const libhdf5_hl = ENV["JULIA_LIBHDF5_HL"]
+const libhdf5_size = "" 
 
 # Core API ccall wrappers
 include("api_types.jl")
@@ -1982,8 +1978,6 @@ For the second condition to be true, MPI.jl must be imported before HDF5.jl.
 has_parallel() = HAS_PARALLEL[]
 
 function __init__()
-    check_deps()
-
     # disable file locking as that can cause problems with mmap'ing
     if !haskey(ENV, "HDF5_USE_FILE_LOCKING")
         ENV["HDF5_USE_FILE_LOCKING"] = "FALSE"
